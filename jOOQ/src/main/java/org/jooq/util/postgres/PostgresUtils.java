@@ -528,14 +528,15 @@ public class PostgresUtils {
     /**
      * Create a PostgreSQL string representation of a binary.
      */
-    public static String toPGString(byte[] binary) {
-        StringBuilder sb = new StringBuilder();
+    public static String toPGStringOld(byte[] binary) {
+        String prefix = "\\\\";
+        int numberOfBits = 3;
+        StringBuilder sb = new StringBuilder((prefix.length() + numberOfBits) * binary.length);
 
         for (byte b : binary) {
 
             // [#3924] Beware of signed vs unsigned bytes!
-            sb.append("\\\\");
-            sb.append(leftPad(toOctalString(b & 0x000000ff), 3, '0'));
+            sb.append(prefix).append(leftPad(toOctalString(b & 0x000000ff), numberOfBits, '0'));
         }
 
         return sb.toString();
